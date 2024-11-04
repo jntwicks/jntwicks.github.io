@@ -3,44 +3,78 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My GitHub Repositories</title>
+  <title>My Selected GitHub Repositories</title>
   <style>
     body { font-family: Arial, sans-serif; padding: 20px; max-width: 800px; margin: auto; }
     h1 { text-align: center; color: #333; }
     .repo { border: 1px solid #ddd; padding: 15px; margin: 10px 0; border-radius: 8px; }
-    .repo h2 { margin: 0; font-size: 1.2em; color: #0366d6; }
+    .repo h2 { font-size: 1.2em; color: #0366d6; }
     .repo p { color: #666; }
     .repo a { color: #0366d6; text-decoration: none; }
   </style>
 </head>
 <body>
-  <h1>My GitHub Repositories</h1>
-  <div id="repo-list">Loading repositories...</div>
+  <h1>Selected GitHub Projects</h1>
+  <div id="repo-list">
+    <!-- Selected Repositories will be displayed here -->
+  </div>
 
   <script>
-    async function fetchRepositories() {
-      const username = 'jntwicks'; // Replace with your GitHub username
-      const response = await fetch(`https://api.github.com/users/${username}/repos`);
-      const repos = await response.json();
-      
+    // List of selected repositories and their HTML/CSS output files
+    const selectedRepositories = [
+      {
+        name: 'abc',
+        description: 'Basic Git',
+        html_url: 'https://github.com/jntwicks/abc', // Link to the repo
+        output_files: [
+          { file_name: 'Live Demo', file_url: 'https://your-username.github.io/project-one/index.html' }
+        ]
+      },
+      {
+        name: 'lecture0',
+        description: 'lecture notes',
+        html_url: 'https://github.com/your-username/project-two',
+        output_files: [
+          { file_name: 'Live Demo', file_url: 'https://github.com/jntwicks/abc/blob/main/index.html' }
+        ]
+      }
+      // Add more projects as needed
+    ];
+
+    // Function to render repositories
+    function renderRepositories() {
       const repoList = document.getElementById('repo-list');
       repoList.innerHTML = '';
 
-      repos.forEach(repo => {
+      selectedRepositories.forEach(repo => {
         const repoDiv = document.createElement('div');
         repoDiv.classList.add('repo');
-        
+
+        // Repository name and description
         repoDiv.innerHTML = `
           <h2><a href="${repo.html_url}" target="_blank">${repo.name}</a></h2>
-          <p>${repo.description || 'No description available'}</p>
-          <p>⭐ ${repo.stargazers_count} | 🍴 ${repo.forks_count}</p>
+          <p>${repo.description}</p>
         `;
-        
+
+        // Links to output files (HTML/CSS files)
+        const fileList = document.createElement('p');
+        repo.output_files.forEach(file => {
+          const link = document.createElement('a');
+          link.href = file.file_url;
+          link.target = '_blank';
+          link.textContent = file.file_name;
+          fileList.appendChild(link);
+          fileList.appendChild(document.createTextNode(' | '));
+        });
+
+        // Append file list and repoDiv to the main repo list
+        repoDiv.appendChild(fileList);
         repoList.appendChild(repoDiv);
       });
     }
 
-    fetchRepositories();
+    // Render the repositories on page load
+    renderRepositories();
   </script>
 </body>
 </html>
